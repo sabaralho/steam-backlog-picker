@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steam Backlog Picker</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">SB</div>
+        <div>
+          <h1>Steam Backlog Picker</h1>
+          <p class="subtitle">Biblioteca da Família Steam &bull; Filtro inteligente &amp; Roleta</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span id="stats-pill" class="stats-pill" aria-live="polite">Carregando...</span>
+        <span id="collection-badge" class="collection-badge hidden"></span>
+
+        <div class="io-actions">
+          <button id="export-status-btn" type="button" class="btn btn-ghost" title="Exportar marcações (localStorage) em JSON">
+            Exportar
+          </button>
+          <button id="import-status-btn" type="button" class="btn btn-ghost" title="Importar marcações de um arquivo JSON">
+            Importar
+          </button>
+          <input id="import-file-input" type="file" accept=".json,application/json" class="sr-only" />
+        </div>
+
+        <button id="roulette-btn" type="button" class="btn btn-primary">
+          <span aria-hidden="true">&#127922;</span> Roleta do Backlog
+        </button>
+      </div>
+    </header>
+
+    <section class="filters-panel" aria-label="Filtros e busca">
+      <div class="filters-row filters-row-main">
+        <div class="field-group field-search">
+          <label for="search-input" class="sr-only">Buscar por nome</label>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Buscar jogo por nome..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="field-group">
+          <label for="genre-select">Gênero</label>
+          <select id="genre-select">
+            <option value="">Todos os gêneros</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="sort-select">Ordenar por</label>
+          <select id="sort-select">
+            <option value="rating">Nota na Steam</option>
+            <option value="duration">Duração (menor → maior)</option>
+            <option value="size">Tamanho no SSD (menor → maior)</option>
+            <option value="alpha">Ordem Alfabética</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="status-view-select">Status</label>
+          <select id="status-view-select">
+            <option value="all">Todos</option>
+            <option value="favorite">Quero jogar (Favoritos)</option>
+            <option value="played">Já joguei / Zerados</option>
+            <option value="hidden">Ocultos</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filters-row filters-row-toggles">
+        <div class="category-checks" role="group" aria-label="Categorias da biblioteca">
+          <span class="group-label">Categorias:</span>
+          <label class="check-label">
+            <input type="checkbox" class="category-checkbox" value="familia" checked />
+            <span>Família Steam</span>
+          </label>
+          <label class="check-label">
+            <input type="checkbox" class="category-checkbox" value="gratuito" checked />
+            <span>Gratuitos</span>
+          </label>
+          <label class="check-label">
+            <input type="checkbox" class="category-checkbox" value="excluido" />
+            <span>Excluídos</span>
+          </label>
+        </div>
+
+        <label class="check-label check-hide-done">
+          <input id="hide-done-checkbox" type="checkbox" checked />
+          <span>Ocultar "Já joguei" e "Ocultar"</span>
+        </label>
+      </div>
+
+      <div class="filters-row filters-row-chips">
+        <div class="chips-group" role="group" aria-label="Atalhos rápidos">
+          <button type="button" class="chip" data-chip="short" aria-pressed="false">
+            Curtos (&lt; 10h)
+          </button>
+          <button type="button" class="chip" data-chip="light" aria-pressed="false">
+            Leves no SSD (&lt; 15 GB)
+          </button>
+          <button type="button" class="chip" data-chip="acclaimed" aria-pressed="false">
+            Aclamados (90%+ na Steam)
+          </button>
+          <button type="button" class="chip" data-chip="hiddenGem" aria-pressed="false">
+            Joias escondidas (90%+ e &lt; 5.000 reviews)
+          </button>
+        </div>
+
+        <button id="clear-filters-btn" type="button" class="btn btn-subtle">
+          Limpar filtros
+        </button>
+      </div>
+
+      <div class="filters-row filters-row-sliders">
+        <div class="slider-control">
+          <div class="slider-header">
+            <label for="max-hours-range">Duração máxima (h)</label>
+            <div class="slider-value-wrap">
+              <input
+                id="max-hours-input"
+                type="number"
+                min="1"
+                max="500"
+                step="1"
+                placeholder="∞"
+                aria-label="Duração máxima em horas"
+              />
+              <span id="max-hours-display" class="slider-tag">Sem limite</span>
+            </div>
+          </div>
+          <input id="max-hours-range" type="range" min="1" max="101" value="101" />
+        </div>
+
+        <div class="slider-control">
+          <div class="slider-header">
+            <label for="max-gb-range">Tamanho máximo (GB)</label>
+            <div class="slider-value-wrap">
+              <input
+                id="max-gb-input"
+                type="number"
+                min="1"
+                max="500"
+                step="1"
+                placeholder="∞"
+                aria-label="Tamanho máximo em GB"
+              />
+              <span id="max-gb-display" class="slider-tag">Sem limite</span>
+            </div>
+          </div>
+          <input id="max-gb-range" type="range" min="1" max="151" value="151" />
+        </div>
+
+        <div class="slider-control">
+          <div class="slider-header">
+            <label for="min-rating-range">Nota mínima (%)</label>
+            <div class="slider-value-wrap">
+              <input
+                id="min-rating-input"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                value="0"
+                aria-label="Nota mínima em porcentagem"
+              />
+              <span id="min-rating-display" class="slider-tag">0% (todas)</span>
+            </div>
+          </div>
+          <input id="min-rating-range" type="range" min="0" max="100" value="0" />
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <div id="empty-state" class="empty-state hidden">
+        <h2>Nenhum jogo encontrado</h2>
+        <p id="empty-state-message">Ajuste os filtros ou limpe a busca para visualizar mais jogos.</p>
+        <button id="empty-clear-btn" type="button" class="btn btn-primary">Limpar filtros</button>
+      </div>
+
+      <div id="games-grid" class="games-grid" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <!-- Roleta do Backlog Modal -->
+  <div id="roulette-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="roulette-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">Sorteio respeitando filtros ativos</span>
+          <h2 id="roulette-title">Roleta do Backlog</h2>
+        </div>
+        <button id="roulette-close-btn" type="button" class="icon-close" aria-label="Fechar modal">&times;</button>
+      </div>
+
+      <div id="roulette-stage" class="roulette-stage">
+        <div class="roulette-cover-wrap">
+          <img id="roulette-cover" src="" alt="" />
+          <span id="roulette-category-badge" class="badge"></span>
+        </div>
+
+        <div class="roulette-info">
+          <h3 id="roulette-game-name">Sorteando...</h3>
+          <p id="roulette-genres" class="roulette-genres"></p>
+
+          <div class="roulette-metrics">
+            <div class="metric-box">
+              <span class="metric-label">Nota Steam</span>
+              <strong id="roulette-rating">—</strong>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Campanha (HLTB)</span>
+              <strong id="roulette-hours">—</strong>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Tamanho SSD</span>
+              <strong id="roulette-size">—</strong>
+            </div>
+          </div>
+
+          <div id="roulette-status-bar" class="roulette-status-bar">
+            <button type="button" class="status-btn" data-roulette-status="favorite">Quero jogar</button>
+            <button type="button" class="status-btn" data-roulette-status="played">Já joguei</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="roulette-reroll-btn" type="button" class="btn btn-ghost">
+          &#127922; Sortear outro
+        </button>
+        <div class="modal-links">
+          <a id="roulette-store-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+            Ver na Loja
+          </a>
+          <a id="roulette-steam-link" href="#" class="btn btn-primary">
+            Abrir na Steam
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
