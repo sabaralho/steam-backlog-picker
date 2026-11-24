@@ -695,10 +695,23 @@
     }
   }
 
+  function debounce(fn, delayMs = 80) {
+    let timerId = null;
+    return (...args) => {
+      if (timerId !== null) window.clearTimeout(timerId);
+      timerId = window.setTimeout(() => {
+        timerId = null;
+        fn(...args);
+      }, delayMs);
+    };
+  }
+
   function bindEvents() {
+    const debouncedRender = debounce(applyFiltersAndRender, 80);
+
     dom.searchInput.addEventListener("input", () => {
       state.filters.search = dom.searchInput.value;
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.genreSelect.addEventListener("change", () => {
@@ -747,7 +760,7 @@
       const val = Number(dom.maxHoursRange.value);
       state.filters.maxHours = val >= MAX_HOURS_UNLIMITED ? null : val;
       syncControlsFromFilters();
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.maxHoursInput.addEventListener("input", () => {
@@ -765,14 +778,14 @@
         dom.maxHoursRange.value = String(Math.min(state.filters.maxHours, 100));
         dom.maxHoursDisplay.textContent = `Até ${state.filters.maxHours}h`;
       }
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.maxGbRange.addEventListener("input", () => {
       const val = Number(dom.maxGbRange.value);
       state.filters.maxGb = val >= MAX_GB_UNLIMITED ? null : val;
       syncControlsFromFilters();
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.maxGbInput.addEventListener("input", () => {
@@ -790,13 +803,13 @@
         dom.maxGbRange.value = String(Math.min(state.filters.maxGb, 150));
         dom.maxGbDisplay.textContent = `Até ${state.filters.maxGb} GB`;
       }
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.minRatingRange.addEventListener("input", () => {
       state.filters.minRating = Number(dom.minRatingRange.value) || 0;
       syncControlsFromFilters();
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.minRatingInput.addEventListener("input", () => {
@@ -804,13 +817,13 @@
       state.filters.minRating = num;
       dom.minRatingRange.value = String(num);
       dom.minRatingDisplay.textContent = num <= 0 ? "0% (todas)" : `${num}%+`;
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.minMetacriticRange.addEventListener("input", () => {
       state.filters.minMetacritic = Number(dom.minMetacriticRange.value) || 0;
       syncControlsFromFilters();
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     dom.minMetacriticInput.addEventListener("input", () => {
@@ -818,7 +831,7 @@
       state.filters.minMetacritic = num;
       dom.minMetacriticRange.value = String(num);
       dom.minMetacriticDisplay.textContent = num <= 0 ? "0 (todas)" : `${num}+`;
-      applyFiltersAndRender();
+      debouncedRender();
     });
 
     const resetAllFilters = () => {

@@ -249,17 +249,25 @@ async def _request_json(
     limiter: RateLimiter,
     url: str,
     params: dict[str, Any] | None = None,
-    retries: int = 3,
+    retries: int = 5,
 ) -> tuple[Any, bool]:
     """Perform an HTTP GET returning (parsed_json, ok) with rate limiting and backoff."""
+    backoff_429 = (10, 25, 45, 60, 60)
     for attempt in range(retries):
         await limiter.wait()
         try:
             resp = await client.get(url, params=params)
-            if resp.status_code == 429 or resp.status_code >= 500:
+            if resp.status_code == 429:
                 retry_after = resp.headers.get("Retry-After")
-                wait_s = float(retry_after) if retry_after and retry_after.isdigit() else (1.5 * (2**attempt))
-                await asyncio.sleep(min(wait_s, 15.0))
+                if retry_after and retry_after.isdigit():
+                    wait_s = min(float(retry_after), 90.0)
+                else:
+                    wait_s = float(backoff_429[min(attempt, len(backoff_429) - 1)])
+                print(f"  [429] aguardando {int(wait_s)}s...", flush=True)
+                await asyncio.sleep(wait_s)
+                continue
+            if resp.status_code >= 500:
+                await asyncio.sleep(min(1.5 * (2**attempt), 15.0))
                 continue
             if resp.status_code != 200:
                 return None, False
@@ -267,7 +275,7 @@ async def _request_json(
         except ValueError:
             return None, False
         except httpx.RequestError:
-            await asyncio.sleep(1.0 * (2**attempt))
+            await asyncio.sleep(min(1.0 * (2**attempt), 15.0))
     return None, False
 
 
@@ -768,25 +776,28 @@ async def enrich_games(args: argparse.Namespace) -> None:
                     rec["fetch_status"]["steam_details"] = "skipped"
                     rec["fetch_status"]["steam_reviews"] = "skipped"
 
-            # 2. Steam Details & Reviews (only when appid exists)
-            if rec.get("appid") is not None:
+            # 2. Steam Details (needed first so steam_name is available for HLTB)
+            if rec.get("appid") is not None and needs["details"]:
                 appid = int(rec["appid"])
-                if needs["details"]:
-                    details, details_status = await fetch_steam_details(client, steam_limiter, appid)
-                    rec["fetch_status"]["steam_details"] = details_status
-                    if details:
-                        rec.update(details)
+                details, details_status = await fetch_steam_details(client, steam_limiter, appid)
+                rec["fetch_status"]["steam_details"] = details_status
+                if details:
+                    rec.update(details)
 
-                if needs["reviews"]:
-                    reviews, reviews_status = await fetch_steam_reviews(client, steam_limiter, appid)
-                    rec["fetch_status"]["steam_reviews"] = reviews_status
-                    if reviews:
-                        rec.update(reviews)
-                        if rec.get("steam_review_total") is None and rec.get("recommendations_total"):
-                            rec["steam_review_total"] = rec["recommendations_total"]
+            # 3. Steam Reviews & HowLongToBeat concurrently per game
+            async def _run_reviews() -> None:
+                if rec.get("appid") is None or not needs["reviews"]:
+                    return
+                reviews, reviews_status = await fetch_steam_reviews(client, steam_limiter, int(rec["appid"]))
+                rec["fetch_status"]["steam_reviews"] = reviews_status
+                if reviews:
+                    rec.update(reviews)
+                    if rec.get("steam_review_total") is None and rec.get("recommendations_total"):
+                        rec["steam_review_total"] = rec["recommendations_total"]
 
-            # 3. HowLongToBeat
-            if needs["hltb"]:
+            async def _run_hltb() -> None:
+                if not needs["hltb"]:
+                    return
                 hltb_data, hltb_status = await fetch_hltb(
                     hltb_limiter,
                     hltb_semaphore,
@@ -797,6 +808,10 @@ async def enrich_games(args: argparse.Namespace) -> None:
                 if hltb_data:
                     rec.update(hltb_data)
 
+            await asyncio.gather(_run_reviews(), _run_hltb())
+
+            rec.setdefault("metacritic_score", None)
+            rec.setdefault("metacritic_url", None)
             rec["updated_at"] = datetime.now(timezone.utc).isoformat()
             records_by_id[gid] = rec
             save_cache(output_path, source_entries, records_by_id, input_path.name)
