@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-24T21:04:39.120283+00:00",
+  "updated_at": "2026-11-24T21:41:17.201282+00:00",
   "source_file": "jogos_familia_steam.txt",
   "total_in_source": 570,
   "games_count": 25,
@@ -45,8 +45,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:03:59.470015+00:00",
-      "recommendations_total": 3543
+      "updated_at": "2026-11-24T21:41:01.819381+00:00",
+      "recommendations_total": 3543,
+      "metacritic_score": 69,
+      "metacritic_url": "https://www.metacritic.com/game/pc/hackgu-last-recode?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:100% orange juice",
@@ -104,8 +106,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:03:59.781411+00:00",
-      "recommendations_total": 14851
+      "updated_at": "2026-11-24T21:41:02.129083+00:00",
+      "recommendations_total": 14852,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:12 is better than 6",
@@ -149,8 +153,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:00.211852+00:00",
-      "recommendations_total": 4374
+      "updated_at": "2026-11-24T21:41:02.525432+00:00",
+      "recommendations_total": 4374,
+      "metacritic_score": 74,
+      "metacritic_url": "https://www.metacritic.com/game/pc/12-is-better-than-6?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:1bitheart",
@@ -193,8 +199,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:00.707578+00:00",
-      "recommendations_total": 852
+      "updated_at": "2026-11-24T21:41:02.953543+00:00",
+      "recommendations_total": 852,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:2dark",
@@ -239,8 +247,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:01.138852+00:00",
-      "recommendations_total": 553
+      "updated_at": "2026-11-24T21:41:03.419740+00:00",
+      "recommendations_total": 553,
+      "metacritic_score": 68,
+      "metacritic_url": "https://www.metacritic.com/game/pc/2dark?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:3d puzzle - hospital 3",
@@ -289,8 +299,10 @@
         "steam_reviews": "ok",
         "hltb": "not_found"
       },
-      "updated_at": "2026-11-24T21:04:02.949981+00:00",
-      "recommendations_total": null
+      "updated_at": "2026-11-24T21:41:06.689341+00:00",
+      "recommendations_total": null,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:8am",
@@ -331,8 +343,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:03.195248+00:00",
-      "recommendations_total": 136
+      "updated_at": "2026-11-24T21:41:06.946562+00:00",
+      "recommendations_total": 136,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:9 kings",
@@ -395,8 +409,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:03.665238+00:00",
-      "recommendations_total": 23596
+      "updated_at": "2026-11-24T21:41:07.373429+00:00",
+      "recommendations_total": 23656,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:a hat in time",
@@ -453,8 +469,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:04.095315+00:00",
-      "recommendations_total": 43055
+      "updated_at": "2026-11-24T21:41:07.832854+00:00",
+      "recommendations_total": 43055,
+      "metacritic_score": 79,
+      "metacritic_url": "https://www.metacritic.com/game/pc/a-hat-in-time?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:absconding zatwor",
@@ -488,7 +506,7 @@
         "steam_reviews": "skipped",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:05.681521+00:00"
+      "updated_at": "2026-11-24T21:41:09.310151+00:00"
     },
     {
       "id": "familia:absolum",
@@ -551,8 +569,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:06.091180+00:00",
-      "recommendations_total": 9793
+      "updated_at": "2026-11-24T21:41:09.909625+00:00",
+      "recommendations_total": 9794,
+      "metacritic_score": 87,
+      "metacritic_url": "https://www.metacritic.com/game/pc/absolum?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:ace - arena: cyber evolution",
@@ -586,7 +606,7 @@
         "steam_reviews": "skipped",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:07.507935+00:00"
+      "updated_at": "2026-11-24T21:41:11.249456+00:00"
     },
     {
       "id": "familia:ace attorney investigations collection",
@@ -629,8 +649,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:07.931106+00:00",
-      "recommendations_total": 3535
+      "updated_at": "2026-11-24T21:41:11.755368+00:00",
+      "recommendations_total": 3535,
+      "metacritic_score": 82,
+      "metacritic_url": "https://www.metacritic.com/game/pc/ace-attorney-investigations-collection?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:adventures of shuggy",
@@ -676,8 +698,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:08.391590+00:00",
-      "recommendations_total": 288
+      "updated_at": "2026-11-24T21:41:12.241381+00:00",
+      "recommendations_total": 288,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:aeonic",
@@ -717,8 +741,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:08.845628+00:00",
-      "recommendations_total": null
+      "updated_at": "2026-11-24T21:41:12.683002+00:00",
+      "recommendations_total": null,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:aerial destruction",
@@ -765,8 +791,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:09.307194+00:00",
-      "recommendations_total": 162
+      "updated_at": "2026-11-24T21:41:13.142006+00:00",
+      "recommendations_total": 162,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:aethermancer",
@@ -820,8 +848,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:09.736767+00:00",
-      "recommendations_total": 2756
+      "updated_at": "2026-11-24T21:41:13.616224+00:00",
+      "recommendations_total": 2756,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:ai: the somnium files",
@@ -867,8 +897,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:10.249748+00:00",
-      "recommendations_total": 8971
+      "updated_at": "2026-11-24T21:41:14.025667+00:00",
+      "recommendations_total": 8970,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:ai: the somnium files - nirvana initiative",
@@ -913,8 +945,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:10.685679+00:00",
-      "recommendations_total": 3625
+      "updated_at": "2026-11-24T21:41:14.482791+00:00",
+      "recommendations_total": 3625,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:akiba's trip: undead & undressed",
@@ -960,8 +994,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:11.116016+00:00",
-      "recommendations_total": 3078
+      "updated_at": "2026-11-24T21:41:14.938382+00:00",
+      "recommendations_total": 3078,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:alabaster dawn",
@@ -1012,8 +1048,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:14.409178+00:00",
-      "recommendations_total": 2310
+      "updated_at": "2026-11-24T21:41:15.382823+00:00",
+      "recommendations_total": 2310,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:alan wake",
@@ -1058,8 +1096,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:16.927514+00:00",
-      "recommendations_total": 46930
+      "updated_at": "2026-11-24T21:41:15.838122+00:00",
+      "recommendations_total": 46933,
+      "metacritic_score": 83,
+      "metacritic_url": "https://www.metacritic.com/game/pc/alan-wake?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:alan wake's american nightmare",
@@ -1101,8 +1141,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:19.406470+00:00",
-      "recommendations_total": 8586
+      "updated_at": "2026-11-24T21:41:16.293765+00:00",
+      "recommendations_total": 8586,
+      "metacritic_score": 73,
+      "metacritic_url": "https://www.metacritic.com/game/pc/alan-wakes-american-nightmare?ftag=MCD-06-10aaa1f"
     },
     {
       "id": "familia:algo bot",
@@ -1144,8 +1186,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:22.681396+00:00",
-      "recommendations_total": 150
+      "updated_at": "2026-11-24T21:41:16.760580+00:00",
+      "recommendations_total": 150,
+      "metacritic_score": null,
+      "metacritic_url": null
     },
     {
       "id": "familia:altf4",
@@ -1193,8 +1237,10 @@
         "steam_reviews": "ok",
         "hltb": "ok"
       },
-      "updated_at": "2026-11-24T21:04:25.356284+00:00",
-      "recommendations_total": 9442
+      "updated_at": "2026-11-24T21:41:17.200786+00:00",
+      "recommendations_total": 9442,
+      "metacritic_score": null,
+      "metacritic_url": null
     }
   ]
 }

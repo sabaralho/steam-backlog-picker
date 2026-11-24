@@ -60,6 +60,9 @@
     minRatingRange: document.getElementById("min-rating-range"),
     minRatingInput: document.getElementById("min-rating-input"),
     minRatingDisplay: document.getElementById("min-rating-display"),
+    minMetacriticRange: document.getElementById("min-metacritic-range"),
+    minMetacriticInput: document.getElementById("min-metacritic-input"),
+    minMetacriticDisplay: document.getElementById("min-metacritic-display"),
     clearFiltersBtn: document.getElementById("clear-filters-btn"),
     emptyClearBtn: document.getElementById("empty-clear-btn"),
     emptyState: document.getElementById("empty-state"),
@@ -78,6 +81,7 @@
     rouletteGameName: document.getElementById("roulette-game-name"),
     rouletteGenres: document.getElementById("roulette-genres"),
     rouletteRating: document.getElementById("roulette-rating"),
+    rouletteMetacritic: document.getElementById("roulette-metacritic"),
     rouletteHours: document.getElementById("roulette-hours"),
     rouletteSize: document.getElementById("roulette-size"),
     rouletteStoreLink: document.getElementById("roulette-store-link"),
@@ -103,6 +107,7 @@
       maxHours: null,
       maxGb: null,
       minRating: 0,
+      minMetacritic: 0,
     };
   }
 
@@ -221,6 +226,11 @@
     dom.minRatingInput.value = String(state.filters.minRating);
     dom.minRatingDisplay.textContent =
       state.filters.minRating <= 0 ? "0% (todas)" : `${state.filters.minRating}%+`;
+
+    dom.minMetacriticRange.value = String(state.filters.minMetacritic);
+    dom.minMetacriticInput.value = String(state.filters.minMetacritic);
+    dom.minMetacriticDisplay.textContent =
+      state.filters.minMetacritic <= 0 ? "0 (todas)" : `${state.filters.minMetacritic}+`;
   }
 
   function matchesFilters(game) {
@@ -258,6 +268,7 @@
       : null;
     const rating = typeof game.steam_rating_pct === "number" ? game.steam_rating_pct : null;
     const reviews = typeof game.steam_review_total === "number" ? game.steam_review_total : null;
+    const mc = typeof game.metacritic_score === "number" ? game.metacritic_score : null;
 
     if (f.chips.short && !(hours !== null && hours < 10)) return false;
     if (f.chips.light && !(gb !== null && gb < 15)) return false;
@@ -272,6 +283,7 @@
     if (f.maxHours !== null && !(hours !== null && hours <= f.maxHours)) return false;
     if (f.maxGb !== null && !(gb !== null && gb <= f.maxGb)) return false;
     if (f.minRating > 0 && !(rating !== null && rating >= f.minRating)) return false;
+    if (f.minMetacritic > 0 && !(mc !== null && mc >= f.minMetacritic)) return false;
 
     return true;
   }
@@ -288,6 +300,13 @@
         const rca = typeof a.steam_review_total === "number" ? a.steam_review_total : -1;
         const rcb = typeof b.steam_review_total === "number" ? b.steam_review_total : -1;
         if (rcb !== rca) return rcb - rca;
+      } else if (sortKey === "metacritic") {
+        const ma = typeof a.metacritic_score === "number" ? a.metacritic_score : -1;
+        const mb = typeof b.metacritic_score === "number" ? b.metacritic_score : -1;
+        if (mb !== ma) return mb - ma;
+        const ra = typeof a.steam_rating_pct === "number" ? a.steam_rating_pct : -1;
+        const rb = typeof b.steam_rating_pct === "number" ? b.steam_rating_pct : -1;
+        if (rb !== ra) return rb - ra;
       } else if (sortKey === "duration") {
         const ha = typeof a.main_story_hours === "number" && a.main_story_hours > 0 ? a.main_story_hours : Infinity;
         const hb = typeof b.main_story_hours === "number" && b.main_story_hours > 0 ? b.main_story_hours : Infinity;
@@ -347,6 +366,13 @@
     return "rating-low";
   }
 
+  function metacriticClass(score) {
+    if (typeof score !== "number") return "";
+    if (score >= 75) return "mc-high";
+    if (score >= 50) return "mc-mid";
+    return "mc-low";
+  }
+
   function renderGamesGrid(games) {
     const html = games
       .map((game) => {
@@ -383,6 +409,13 @@
             ? `${game.disk_size_gb} GB`
             : "— GB";
 
+        const hasMc = typeof game.metacritic_score === "number";
+        const mcValueHtml = hasMc
+          ? (game.metacritic_url
+              ? `<a class="metric-link" href="${escapeHtml(game.metacritic_url)}" target="_blank" rel="noopener noreferrer" title="Ver no Metacritic">${game.metacritic_score}</a>`
+              : `${game.metacritic_score}`)
+          : "—";
+
         const genres = Array.isArray(game.genres) ? game.genres.slice(0, 3) : [];
         const genresHtml = genres.length
           ? genres.map((g) => `<span class="genre-tag">${escapeHtml(g)}</span>`).join("")
@@ -414,6 +447,11 @@
                   <span class="metric-title">Steam</span>
                   <span class="metric-val ${ratingClass(game.steam_rating_pct)}">${escapeHtml(ratingText)}</span>
                   <span class="metric-sub">${escapeHtml(reviewsText)}</span>
+                </div>
+                <div class="metric">
+                  <span class="metric-title">Meta</span>
+                  <span class="metric-val ${metacriticClass(game.metacritic_score)}">${mcValueHtml}</span>
+                  <span class="metric-sub">Crítica</span>
                 </div>
                 <div class="metric">
                   <span class="metric-title">Duração</span>
@@ -505,6 +543,14 @@
       typeof game.steam_rating_pct === "number"
         ? `${game.steam_rating_pct}% (${formatCompactNumber(game.steam_review_total || 0)})`
         : "Sem nota";
+
+    if (typeof game.metacritic_score === "number") {
+      dom.rouletteMetacritic.textContent = `${game.metacritic_score} / 100`;
+      dom.rouletteMetacritic.className = metacriticClass(game.metacritic_score);
+    } else {
+      dom.rouletteMetacritic.textContent = "Sem nota";
+      dom.rouletteMetacritic.className = "";
+    }
 
     if (typeof game.main_story_hours === "number" && game.main_story_hours > 0) {
       const extra =
@@ -758,6 +804,20 @@
       state.filters.minRating = num;
       dom.minRatingRange.value = String(num);
       dom.minRatingDisplay.textContent = num <= 0 ? "0% (todas)" : `${num}%+`;
+      applyFiltersAndRender();
+    });
+
+    dom.minMetacriticRange.addEventListener("input", () => {
+      state.filters.minMetacritic = Number(dom.minMetacriticRange.value) || 0;
+      syncControlsFromFilters();
+      applyFiltersAndRender();
+    });
+
+    dom.minMetacriticInput.addEventListener("input", () => {
+      const num = Math.max(0, Math.min(100, Math.round(Number(dom.minMetacriticInput.value) || 0)));
+      state.filters.minMetacritic = num;
+      dom.minMetacriticRange.value = String(num);
+      dom.minMetacriticDisplay.textContent = num <= 0 ? "0 (todas)" : `${num}+`;
       applyFiltersAndRender();
     });
 

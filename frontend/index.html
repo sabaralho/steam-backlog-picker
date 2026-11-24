@@ -60,6 +60,7 @@
           <label for="sort-select">Ordenar por</label>
           <select id="sort-select">
             <option value="rating">Nota na Steam</option>
+            <option value="metacritic">Nota Metacritic</option>
             <option value="duration">Duração (menor → maior)</option>
             <option value="size">Tamanho no SSD (menor → maior)</option>
             <option value="alpha">Ordem Alfabética</option>
@@ -178,6 +179,25 @@
           </div>
           <input id="min-rating-range" type="range" min="0" max="100" value="0" />
         </div>
+
+        <div class="slider-control">
+          <div class="slider-header">
+            <label for="min-metacritic-range">Metacritic mínimo</label>
+            <div class="slider-value-wrap">
+              <input
+                id="min-metacritic-input"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                value="0"
+                aria-label="Nota mínima no Metacritic"
+              />
+              <span id="min-metacritic-display" class="slider-tag">0 (todas)</span>
+            </div>
+          </div>
+          <input id="min-metacritic-range" type="range" min="0" max="100" value="0" />
+        </div>
       </div>
     </section>
 
@@ -217,6 +237,10 @@
             <div class="metric-box">
               <span class="metric-label">Nota Steam</span>
               <strong id="roulette-rating">—</strong>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Metacritic</span>
+              <strong id="roulette-metacritic">—</strong>
             </div>
             <div class="metric-box">
               <span class="metric-label">Campanha (HLTB)</span>

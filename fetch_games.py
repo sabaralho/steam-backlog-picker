@@ -405,6 +405,17 @@ async def fetch_steam_details(
         if isinstance(release_info, dict) and release_info.get("date")
         else None
     )
+    metacritic = app_data.get("metacritic")
+    metacritic_score = (
+        int(metacritic["score"])
+        if isinstance(metacritic, dict) and isinstance(metacritic.get("score"), int)
+        else None
+    )
+    metacritic_url = (
+        str(metacritic["url"]).strip()
+        if isinstance(metacritic, dict) and metacritic.get("url")
+        else None
+    )
 
     details = {
         "steam_name": app_data.get("name"),
@@ -418,6 +429,8 @@ async def fetch_steam_details(
         "release_date": release_date,
         "short_description": app_data.get("short_description"),
         "recommendations_total": rec_total,
+        "metacritic_score": metacritic_score,
+        "metacritic_url": metacritic_url,
     }
     return details, "ok"
 
@@ -572,6 +585,8 @@ def _empty_game_record(entry: dict[str, Any]) -> dict[str, Any]:
         "steam_review_total": None,
         "steam_review_positive": None,
         "steam_review_desc": None,
+        "metacritic_score": None,
+        "metacritic_url": None,
         "genres": [],
         "categories": [],
         "disk_size_gb": None,
@@ -597,7 +612,9 @@ def _needs_retry(record: dict[str, Any]) -> dict[str, bool]:
     """Identify which enrichment stages are missing or failed for an existing record."""
     fs = record.get("fetch_status") or {}
     need_search = record.get("appid") is None or fs.get("steam_search") in ("failed", "not_found", "pending", None)
-    need_details = need_search or fs.get("steam_details") != "ok"
+    need_details = need_search or fs.get("steam_details") != "ok" or (
+        record.get("appid") is not None and "metacritic_score" not in record
+    )
     need_reviews = need_search or fs.get("steam_reviews") in ("failed", "pending", None)
     need_hltb = fs.get("hltb") in ("failed", "not_found", "pending", None)
     return {
@@ -669,6 +686,9 @@ def _format_progress_summary(rec: dict[str, Any]) -> str:
         parts.append(f"AppID: {rec['appid']}")
     else:
         parts.append("Steam: N/A")
+
+    if rec.get("metacritic_score") is not None:
+        parts.append(f"MC: {rec['metacritic_score']}")
 
     if rec.get("disk_size_gb") is not None:
         parts.append(f"{rec['disk_size_gb']} GB")
